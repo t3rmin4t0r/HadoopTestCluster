@@ -8,7 +8,7 @@ import org.apache.hadoop.util.*;
 import org.apache.hadoop.mapreduce.*;
 
 import org.apache.hadoop.hdfs.MiniDFSCluster;
-import org.apache.hadoop.mapred.MiniMRCluster;
+import org.apache.hadoop.mapred.*;
 import java.io.*;
 
 public class MiniHadoopCluster {
@@ -16,7 +16,7 @@ public class MiniHadoopCluster {
   private final Configuration conf = new Configuration();
 
   private MiniDFSCluster miniDFSCluster;
-  private MiniMRCluster miniMRCluster;
+  private MiniMRClientCluster miniMRCluster;
 
   public MiniHadoopCluster() {
   }
@@ -30,28 +30,30 @@ public class MiniHadoopCluster {
     conf.set("fs.defaultFS", "hdfs://localhost:9000");
     conf.setInt("dfs.replication", (datanodes > 3) ? 3 : datanodes);
     conf.set("mapred.framework.name", "yarn");
+    conf.set("yarn.scheduler.capacity.root.queues", "default");
+    conf.set("yarn.scheduler.capacity.root.capacity", "100");
+    conf.set("yarn.scheduler.capacity.root.default.capacity", "100");
 
     miniDFSCluster = new MiniDFSCluster.Builder(conf)
           .nameNodePort(9000)
           .numDataNodes(datanodes)
           .build();
 
-    miniMRCluster = new MiniMRCluster(
-            9001,
-            0,
-            tasknodes,
-            conf.get("fs.default.name"),
-            1);
+    miniMRCluster = MiniMRClientClusterFactory.create(this.getClass(), 1, conf);
   }
 
   public void stop() {
-    miniMRCluster.shutdown();
-    miniDFSCluster.shutdown();
+    try {
+      miniMRCluster.stop();
+    } catch(IOException e) {
+    } finally {
+      miniDFSCluster.shutdown();
+    }
   }
 
   public Configuration getConfiguration() { return conf; }
   public MiniDFSCluster getMiniDFSCluster() { return miniDFSCluster; }
-  public MiniMRCluster getMiniMRCluster() { return miniMRCluster; }
+  public MiniMRClientCluster getMiniMRCluster() { return miniMRCluster; }
 
   public static MiniHadoopCluster cluster = null;
 
