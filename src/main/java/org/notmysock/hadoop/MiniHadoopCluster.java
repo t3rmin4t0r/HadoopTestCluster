@@ -30,6 +30,7 @@ public class MiniHadoopCluster {
     conf.set("fs.defaultFS", "hdfs://localhost:9000");
     conf.setInt("dfs.replication", (datanodes > 3) ? 3 : datanodes);
     conf.set("mapred.framework.name", "yarn");
+    conf.set("yarn.resourcemanager.address", "0.0.0.0:8032");
     conf.set("yarn.scheduler.capacity.root.queues", "default");
     conf.set("yarn.scheduler.capacity.root.capacity", "100");
     conf.set("yarn.scheduler.capacity.root.default.capacity", "100");
