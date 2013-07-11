@@ -27,16 +27,19 @@ public class MiniHadoopCluster {
 
   public void start(int datanodes, int tasknodes ) throws IOException {
 
-    conf.set("fs.defaultFS", "hdfs://localhost:9000");
     conf.setInt("dfs.replication", (datanodes > 3) ? 3 : datanodes);
     conf.set("mapred.framework.name", "yarn");
-    conf.set("yarn.resourcemanager.address", "0.0.0.0:8032");
+    conf.setBoolean("yarn.minicluster.fixed.ports", true);
+    conf.setBoolean("mapreduce.jobhistory.minicluster.fixed.ports", true);
     conf.set("yarn.scheduler.capacity.root.queues", "default");
-    conf.set("yarn.scheduler.capacity.root.capacity", "100");
-    conf.set("yarn.scheduler.capacity.root.default.capacity", "100");
+    conf.setInt("yarn.scheduler.capacity.root.capacity", 100);
+    conf.setInt("yarn.scheduler.capacity.root.default.capacity", 100);
+    conf.setInt("yarn.nodemanager.resource.memory-mb", 4096);
+    conf.setInt("yarn.scheduler.minimum-allocation-mb", 512);
+    conf.setInt("yarn.nodemanager.delete.debug-delay-sec", 360);
 
     miniDFSCluster = new MiniDFSCluster.Builder(conf)
-          .nameNodePort(9000)
+          .nameNodePort(56565)
           .numDataNodes(datanodes)
           .build();
 
@@ -59,7 +62,6 @@ public class MiniHadoopCluster {
   public static MiniHadoopCluster cluster = null;
 
   public static void main(String[] args) throws Exception {
-
     cluster = new MiniHadoopCluster();
     cluster.start();
 
