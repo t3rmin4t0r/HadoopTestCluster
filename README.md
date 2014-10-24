@@ -7,6 +7,12 @@ To use (fill in the appropriate hadoop-2.x version in the pom.xml)
 
 `mvn package`
 
+For Tez usage, you can do
+
+./run.sh
+
+In case you need MR and to use MRAppMaster for this,
+
 `export HADOOP_CLASSPATH=target/lib\/\*`
 `../bin/hadoop jar target/hadoop-test-cluster-1.0-test.jar`
 

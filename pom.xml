@@ -16,8 +16,21 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <hadoop.version>2.4.0</hadoop.version>
+    <hadoop.version>2.6.0-SNAPSHOT</hadoop.version>
   </properties>
+  <repositories>
+     <repository>
+       <id>apache.snapshots</id>
+       <name>Apache Snapshot Repository</name>
+       <url>http://repository.apache.org/snapshots</url>
+       <releases>
+         <enabled>false</enabled>
+       </releases>
+       <snapshots>
+         <enabled>true</enabled>
+       </snapshots>
+     </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
@@ -31,6 +44,19 @@
       <artifactId>hadoop-minicluster</artifactId>
       <version>${hadoop.version}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>compile</scope>
+	  <type>test-jar</type>
     </dependency>
 	<dependency>
       <groupId>org.apache.hadoop</groupId>
